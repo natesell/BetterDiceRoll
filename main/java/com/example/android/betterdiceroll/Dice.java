@@ -1,31 +1,26 @@
 package com.example.android.betterdiceroll;
 
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import java.io.Serializable;
+import java.util.Objects;
 
-public class Dice {
-
-    // private boolean computerPlaying = false;
+public class Dice
+        implements Serializable {
+    private int index;
     private int roll;
     private boolean isActiveDice;
-    private ImageView rollAsImageView;
-    private LinearLayout activeDiceLinearLayout;
-    private LinearLayout heldDiceLinearLayout;
+    private boolean isHeldDice;
 
-    public Dice() {
+    public Dice(int index) {
+        this.index = index;
+
         roll = 0;
         isActiveDice = true;
     }
 
-    public Dice(int roll) {
-        this.roll = roll;
-    }
-
     public void holdDice() {
-        if (this.getIsActive()) {
-            this.getActiveDiceLinearLayout().removeView(this.getImageView());
-            this.getHeldDiceLinearLayout().addView(this.getImageView());
-            this.setIsActive(false);
+        if(isActiveDice) {
+            isActiveDice = false;
+            isHeldDice = true;
         }
     }
 
@@ -33,39 +28,34 @@ public class Dice {
         this.roll = roll;
     }
 
-    public void setImageView(ImageView rollAsImageView) {
-        this.rollAsImageView = rollAsImageView;
-    }
-
-    public ImageView getImageView() {
-        return rollAsImageView;
-    }
-
     public int getRoll() {
         return roll;
     }
 
-    public boolean getIsActive() {
+    public boolean isActiveDice() {
         return isActiveDice;
     }
 
-    public void setIsActive(boolean isActive) {
-        isActiveDice = isActive;
+    public boolean isHeldDice() {
+        return isHeldDice;
     }
 
-    public void setActiveDiceLinearLayout(LinearLayout activeDiceLinearLayout) {
-        this.activeDiceLinearLayout = activeDiceLinearLayout;
+    @Override
+    public boolean equals(Object o) {
+        if(this == o) {
+            return true;
+        }
+        if(o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Dice dice = (Dice) o;
+        return index == dice.index;
     }
 
-    public LinearLayout getActiveDiceLinearLayout() {
-        return activeDiceLinearLayout;
-    }
-
-    public void setHeldDiceLinearLayout(LinearLayout heldDiceLinearLayout) {
-        this.heldDiceLinearLayout = heldDiceLinearLayout;
-    }
-
-    public LinearLayout getHeldDiceLinearLayout() {
-        return heldDiceLinearLayout;
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 31 * hash + index;
+        return hash;
     }
 }
