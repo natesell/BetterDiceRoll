@@ -1,10 +1,14 @@
 package com.example.android.betterdiceroll;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,10 +30,23 @@ public class ShipCaptainCrewActivity
     private LinearLayout activeDiceLinearLayout;
     private LinearLayout heldDiceLinearLayout;
 
+    SharedPreferences prefs;
+
+    final String creditPrefsKey = "com.example.app.credits";
+
+    int credits = 1000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ship_captain_crew);
+
+        prefs = this.getSharedPreferences(
+                "com.example.app", Context.MODE_PRIVATE);
+
+        credits = prefs.getInt(creditPrefsKey, 1000);
+        TextView creditsTextView = findViewById(R.id.mCreditAmountTextView);
+        creditsTextView.setText(String.valueOf(credits));
 
         activeDiceLinearLayout = findViewById(R.id.mActiveDiceLinearLayout);
         heldDiceLinearLayout = findViewById(R.id.mHeldDiceLinearLayout);
@@ -78,6 +95,13 @@ public class ShipCaptainCrewActivity
 
     public void onClickComputerPlayButton(View view) {
         onComputerPlaying();
+    }
+
+    public void onClickAdd10CreditsButton(View view) {
+        credits = credits + 10;
+        prefs.edit().putInt(creditPrefsKey, credits).apply();
+        TextView creditsTextView = findViewById(R.id.mCreditAmountTextView);
+        creditsTextView.setText(String.valueOf(credits));
     }
 
     @Override

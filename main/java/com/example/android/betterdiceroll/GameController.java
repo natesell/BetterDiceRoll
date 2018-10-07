@@ -2,6 +2,7 @@ package com.example.android.betterdiceroll;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ public class GameController
     private boolean gameEnded;
     private boolean rollDisabled;
     private boolean isComputerPlaying;
+
 
     {
         for(int i = 0; i < 5; i++) {
@@ -57,7 +59,6 @@ public class GameController
         bundle.putSerializable("dices", dices);
         bundle.putBoolean("gameEnded", gameEnded);
         bundle.putBoolean("rollDisabled", rollDisabled);
-        bundle.putBoolean("isComputerPlaying", isComputerPlaying);
         return bundle;
     }
 
@@ -129,19 +130,29 @@ public class GameController
     }
 
     public void simulateComputerPlay() {
+
         boolean hasAtleastOneActiveDice = false;
 
         for (Dice currentDice : dices) {
-            hasAtleastOneActiveDice = currentDice.isActiveDice();
+            if(currentDice.isActiveDice()) {
+                hasAtleastOneActiveDice = true;
+                break;
+            }
         }
 
         while ((hasAtleastOneActiveDice == true) & (rollCount > 0)) {
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                //Do something here
-                holdDiceForShipCaptainCrew();
-                roll();
-                holdDiceForShipCaptainCrew();
-            }, 750);
+            // I still want to delay these 3 actions v
+            holdDiceForShipCaptainCrew();
+            roll();
+            holdDiceForShipCaptainCrew();
+
+
+            for (Dice currentDice : dices) {
+                if(currentDice.isActiveDice()) {
+                    hasAtleastOneActiveDice = true;
+                    break;
+                }
+            }
         }
     }
 
