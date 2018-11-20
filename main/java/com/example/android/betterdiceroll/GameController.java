@@ -75,6 +75,11 @@ public class GameController
         }
     }
 
+    public void decrementRollCount() {
+        if (rollCount > 0)
+            rollCount--;
+    }
+
     public void roll() {
         if(rollCount > 0) {
             rollDiceIfActive();
@@ -134,25 +139,22 @@ public class GameController
         boolean hasAtleastOneActiveDice = false;
 
         for (Dice currentDice : dices) {
-            if(currentDice.isActiveDice()) {
+            if (currentDice.isActiveDice()) {
                 hasAtleastOneActiveDice = true;
                 break;
             }
         }
 
-        while ((hasAtleastOneActiveDice == true) & (rollCount > 0)) {
-            // I still want to delay these 3 actions v
-            holdDiceForShipCaptainCrew();
-            roll();
-            holdDiceForShipCaptainCrew();
+        if (hasAtleastOneActiveDice && rollCount > 0) {
+            new Handler().postDelayed(() -> {
+                roll();
+                new Handler().postDelayed(() -> {
+                    holdDiceForShipCaptainCrew();
+                }, 750L);
+            }, 750L);
 
 
-            for (Dice currentDice : dices) {
-                if(currentDice.isActiveDice()) {
-                    hasAtleastOneActiveDice = true;
-                    break;
-                }
-            }
+
         }
     }
 
@@ -256,7 +258,7 @@ public class GameController
 
             }
 
-            if(sixIsHeld && fourIsHeld && fiveIsHeld) {
+            if(fourIsHeld && fiveIsHeld) {
                 for(int i = 0; i < dices.size(); i++) {
                     Dice currentDice = dices.get(i);
 
@@ -321,6 +323,23 @@ public class GameController
         //
         currentScore = 0;
 
+        for(int i = 0; i < dices.size(); i++) {
+            Dice currentDice = dices.get(i);
+            int currentDiceRoll = currentDice.getRoll();
+
+            if(!currentDice.isActiveDice()) {
+                if(currentDiceRoll == 6) {
+                    sixIsHeld = true;
+                }
+                if(currentDiceRoll == 5) {
+                    fiveIsHeld = true;
+                }
+                if(currentDiceRoll == 4) {
+                    fourIsHeld = true;
+                }
+            }
+        }
+
         if(sixIsHeld && fiveIsHeld && fourIsHeld) {
             currentScore = -(6 + 5 + 4);
 
@@ -332,9 +351,9 @@ public class GameController
             }
         }
 
-        if(gameUpdateListener != null) {
+        if (gameUpdateListener != null)
             gameUpdateListener.onCurrentScoreUpdated(currentScore);
-        }
+
 
         if(rollCount == 0) {
             gameEnded = true;

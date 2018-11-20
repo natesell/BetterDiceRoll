@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">BetterDiceRoll</string>
+    <string name="current_score">Current Score:\u0020</string>
+    <string name="final_score">Final Score:\u0020</string>
+    <string name="current_roll_count">Current Roll Count:\u0020</string>
+    <string name="active_dice">Active Dice:</string>
+    <string name="held_dice">Held Dice:</string>
 </resources>

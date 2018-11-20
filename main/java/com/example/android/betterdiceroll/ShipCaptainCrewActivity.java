@@ -1,19 +1,15 @@
 package com.example.android.betterdiceroll;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -30,23 +26,29 @@ public class ShipCaptainCrewActivity
     private LinearLayout activeDiceLinearLayout;
     private LinearLayout heldDiceLinearLayout;
 
+    // Don't need this code, just instructive
+    /*
     SharedPreferences prefs;
 
     final String creditPrefsKey = "com.example.app.credits";
 
     int credits = 1000;
+    */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ship_captain_crew);
 
+        // Also don't need this code but it's instructive as well
+        /*
         prefs = this.getSharedPreferences(
                 "com.example.app", Context.MODE_PRIVATE);
 
         credits = prefs.getInt(creditPrefsKey, 1000);
         TextView creditsTextView = findViewById(R.id.mCreditAmountTextView);
         creditsTextView.setText(String.valueOf(credits));
+        */
 
         activeDiceLinearLayout = findViewById(R.id.mActiveDiceLinearLayout);
         heldDiceLinearLayout = findViewById(R.id.mHeldDiceLinearLayout);
@@ -97,12 +99,13 @@ public class ShipCaptainCrewActivity
         onComputerPlaying();
     }
 
-    public void onClickAdd10CreditsButton(View view) {
+    // I dont want a button that does this but it's instructive
+    /*public void onClickAdd10CreditsButton(View view) {
         credits = credits + 10;
         prefs.edit().putInt(creditPrefsKey, credits).apply();
         TextView creditsTextView = findViewById(R.id.mCreditAmountTextView);
         creditsTextView.setText(String.valueOf(credits));
-    }
+    }*/
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -170,7 +173,38 @@ public class ShipCaptainCrewActivity
         holdButton.setClickable(false);
         holdButton.setAlpha(0.2f);
         gameController.simulateComputerPlay();
+
+        /*if (gameController.getRollCount() > 0 && gameController.getCurrentScore() > 0) {
+            TextView staticCurrentScoreTextView = findViewById(R.id.mStaticCurrentOrFinalScoreTextView);
+            staticCurrentScoreTextView.setText(R.string.final_score);
+            while (gameController.getRollCount() > 0)
+                gameController.decrementRollCount();
+            onRollCountChanged(gameController.getRollCount()); }
+        else {
+            gameController.simulateComputerPlay();
+            if (gameController.getRollCount() > 0 && gameController.getCurrentScore() > 0) {
+                TextView staticCurrentScoreTextView = findViewById(R.id.mStaticCurrentOrFinalScoreTextView);
+                staticCurrentScoreTextView.setText(R.string.final_score);
+                while (gameController.getRollCount() > 0)
+                    gameController.decrementRollCount();
+                onRollCountChanged(gameController.getRollCount()); }
+            else {
+                gameController.simulateComputerPlay();
+            }
+        }*/
     }
+
+
+        /*new Handler().postDelayed(()-> {
+        if (gameController.getRollCount() > 0 && gameController.getCurrentScore() > 0) {
+            TextView staticCurrentScoreTextView = findViewById(R.id.mStaticCurrentOrFinalScoreTextView);
+            staticCurrentScoreTextView.setText(R.string.final_score);
+            while (gameController.getRollCount() > 0)
+                gameController.decrementRollCount();
+            onRollCountChanged(gameController.getRollCount()); }
+        }, 750L);*/
+
+
 
     @Override
     public void onCurrentScoreUpdated(int currentScore) {
@@ -180,6 +214,6 @@ public class ShipCaptainCrewActivity
     @Override
     public void onGameEnded() {
         TextView staticFinalScoreTextView = findViewById(R.id.mStaticCurrentOrFinalScoreTextView);
-        staticFinalScoreTextView.setText("Final Score: ");
+        staticFinalScoreTextView.setText(R.string.final_score);
     }
 }
